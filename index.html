@@ -1,88 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart File Converter</title>
+  <meta charset="UTF-8">
+  <title>File Converter</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f0f0f0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
       background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      color: black;
+      margin: 20px;
     }
+
     input, select, button {
-      margin: 0.5rem 0;
-      padding: 0.5rem;
+      margin: 10px 0;
+      padding: 8px;
       font-size: 1rem;
-      width: 100%;
+    }
+
+    #outputFormat {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Smart File Converter</h2>
-    <input type="file" id="fileInput">
-    <select id="formatDropdown">
-      <option disabled selected>Select format...</option>
-    </select>
-    <button onclick="convertFile()">Convert</button>
-  </div>
+
+  <h1>File Converter</h1>
+
+  <input type="file" id="fileInput"><br>
+
+  <label for="outputFormat">Convert to:</label>
+  <select id="outputFormat">
+    <option disabled selected>Select a file first</option>
+  </select><br>
+
+  <button onclick="convert()">Convert</button>
 
   <script>
+    const fileInput = document.getElementById('fileInput');
+    const outputFormat = document.getElementById('outputFormat');
+
     const formatMap = {
-      image: ['jpg', 'png', 'webp', 'gif', 'bmp', 'tiff'],
-      video: ['mp4', 'webm', 'avi'],
-      audio: ['mp3', 'wav', 'ogg'],
-      document: ['pdf', 'docx', 'odt'],
-      text: ['txt', 'json', 'xml'],
+      image: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'],
+      video: ['mp4', 'webm', 'ogg', 'avi'],
+      audio: ['mp3', 'wav', 'ogg', 'flac'],
+      text: ['txt', 'md', 'json', 'csv'],
+      application: ['pdf', 'zip', 'docx']
     };
 
-    function getCategory(type) {
-      if (type.startsWith('image/')) return 'image';
-      if (type.startsWith('video/')) return 'video';
-      if (type.startsWith('audio/')) return 'audio';
-      if (type === 'application/pdf' || type.includes('word')) return 'document';
-      if (type.startsWith('text/')) return 'text';
-      return 'other';
-    }
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (!file) return;
 
-    function updateDropdown(category) {
-      const dropdown = document.getElementById('formatDropdown');
-      dropdown.innerHTML = '';
-      if (!formatMap[category]) {
-        const opt = document.createElement('option');
-        opt.textContent = 'No supported formats';
-        dropdown.appendChild(opt);
-        return;
-      }
-      formatMap[category].forEach(ext => {
-        const opt = document.createElement('option');
-        opt.value = ext;
-        opt.textContent = '.' + ext;
-        dropdown.appendChild(opt);
-      });
-    }
+      const typeCategory = file.type.split('/')[0];
+      const options = formatMap[typeCategory];
 
-    document.getElementById('fileInput').addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-        const category = getCategory(file.type);
-        updateDropdown(category);
+      outputFormat.innerHTML = '';
+
+      if (options) {
+        for (const format of options) {
+          const opt = document.createElement('option');
+          opt.value = format;
+          opt.textContent = `.${format}`;
+          outputFormat.appendChild(opt);
+        }
+      } else {
+        const opt = document.createElement('option');
+        opt.textContent = 'Unsupported file type';
+        outputFormat.appendChild(opt);
       }
     });
 
-    function convertFile() {
-      alert("This is a placeholder — actual conversion logic goes here.");
+    function convert() {
+      const file = fileInput.files[0];
+      const format = outputFormat.value;
+      if (!file || !format) {
+        alert('Select a file and format first.');
+        return;
+      }
+
+      alert(`Pretend converting "${file.name}" to ".${format}"`);
     }
   </script>
+
 </body>
 </html>
