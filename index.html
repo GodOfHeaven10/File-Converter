@@ -66,15 +66,6 @@
       border-radius: 4px;
       width: 100%;
     }
-
-    a {
-      display: block;
-      margin-top: 1em;
-      text-align: center;
-      color: var(--accent-color);
-      text-decoration: none;
-      visibility: hidden;
-    }
   </style>
 </head>
 <body>
@@ -85,47 +76,25 @@
     <input type="file" id="fileInput" onchange="updateLabel()" />
 
     <button onclick="convertFile()">Convert</button>
-    
-    <!-- Hidden download link that becomes visible after conversion -->
-    <a id="downloadLink" href="" download="convertedFile.txt">Download Converted File</a>
   </div>
 
   <script>
-    // Function to update the label to show the chosen file name
     function updateLabel() {
       const fileInput = document.getElementById('fileInput');
       const fileLabel = document.getElementById('fileLabel');
 
+      // Check if a file is selected
       if (fileInput.files.length > 0) {
+        // Update the label text to the name of the file
         fileLabel.textContent = fileInput.files[0].name;
       } else {
+        // If no file is selected, keep the label as "Choose file"
         fileLabel.textContent = "Choose file";
       }
     }
 
-    // Simulate a conversion process and provide a download link
     function convertFile() {
-      const fileInput = document.getElementById('fileInput');
-      const downloadLink = document.getElementById('downloadLink');
-
-      if (fileInput.files.length === 0) {
-        alert('Please select a file first.');
-        return;
-      }
-
-      // Simulating file conversion: just using the file name for this example
-      const fileName = fileInput.files[0].name;
-      const convertedContent = `Converted file: ${fileName}`;
-
-      // Create a Blob (simulated "converted" content)
-      const blob = new Blob([convertedContent], { type: 'text/plain' });
-
-      // Create an Object URL for the Blob
-      const url = URL.createObjectURL(blob);
-
-      // Set the download link to the Object URL and make it visible
-      downloadLink.href = url;
-      downloadLink.style.visibility = 'visible';
+      alert("This is a placeholder — actual conversion logic goes here.");
     }
   </script>
 </body>
