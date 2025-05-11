@@ -45,14 +45,29 @@
   }
 
   input[type="file"] {
-    display: block;
-    width: 100%;
-    padding: 0.5em;
-    margin: 1em 0;
-    border: none; /* Remove any border */
-    background-color: none; /* Set white background */
-    color: #333; /* Text color */
-  }
+      display: block;
+      width: 25%;
+      padding: 0.5em;
+      margin: 1em 0;
+      border: none; /* Remove any border */
+      background-color: none; /* Set white background */
+      color: #FFFFFF; /* Text color */
+      position: relative; /* To position the text relative to the input */
+      z-index: 2; /* Ensures the text stays above the background */
+    }
+
+    /* Style the text that will overlap */
+    .file-text {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #FFFFFF; /* Lighter text color */
+      pointer-events: none; /* Prevents text from blocking interactions with the file input */
+      transform: translateY(-50%); /* Center the text vertically */
+      z-index: 1; /* Text stays under the file input button */
+    }
 
   input[type="file"]:focus {
     outline: none; /* Remove outline */
