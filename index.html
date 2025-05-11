@@ -44,35 +44,44 @@
     margin-bottom: 0.5em;
   }
 
-  input[type="file"] {
-      display: block;
-      width: 25%;
-      padding: 0.5em;
-      margin: 1em 0;
-      border: none; /* Remove any border */
-      background-color: none; /* Set white background */
-      color: #FFFFFF; /* Text color */
-      position: absolute; /* To position the text relative to the input */
-      z-index: 2; /* Ensures the text stays above the background */
-    }
-
-    /* Style the text that will overlap */
-    .file-text {
+      .file-input-wrapper {
       position: relative;
-      top: 50%;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: #FFFFFF; /* Lighter text color */
-      pointer-events: none; /* Prevents text from blocking interactions with the file input */
-      transform: translateY(-50%); /* Center the text vertically */
-      z-index: 1; /* Text stays under the file input button */
+      width: 100%;
+      display: inline-block;
     }
 
-  input[type="file"]:focus {
-    outline: none; /* Remove outline */
-    border: none; /* Ensure no border on focus */
-  }
+    input[type="file"] {
+      display: none; /* Hide the default file input */
+    }
+
+    /* Custom file input button */
+    .file-input-label {
+      display: block;
+      width: 100%;
+      padding: 1em;
+      background: #2a2a2a;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Overlay text */
+    .file-input-wrapper::after {
+      content: "No file chosen";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #aaa;
+      pointer-events: none;
+      font-size: 16px;
+      z-index: 0;  /* Ensure the text is below the label/button */
+    }
 
   select, button {
     display: block;
@@ -101,8 +110,14 @@
   <div class="container">
     <h1>File Converter</h1>
 
-    <label for="fileInput">Select a file:</label>
-    <input type="file" id="fileInput" />
+        <!-- Wrapper for the file input -->
+  <label for="fileInput">Select a file:</label>
+
+    <!-- Wrapper for the file input -->
+    <div class="file-input-wrapper">
+      <input type="file" id="fileInput" />
+      <label class="file-input-label" for="fileInput">Choose File</label>
+    </div>
 
     <label for="formatSelect">Convert to:</label>
     <select id="formatSelect">
