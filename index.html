@@ -110,19 +110,23 @@
   <div class="container">
     <h1>File Converter</h1>
 
-        <!-- Wrapper for the file input -->
-  <label for="fileInput">Select a file:</label>
+    <label for="fileInput" id="fileLabel" class="file-input-wrapper">Choose file</label>
+    <input type="file" id="fileInput" onchange="updateLabel()" />
 
-    <!-- Wrapper for the file input -->
-    <div class="file-input-wrapper">
-      <input type="file" id="fileInput" />
-      <label class="file-input-label" for="fileInput">Choose File</label>
-    </div>
+   <script>
+    function updateLabel() {
+      const fileInput = document.getElementById('fileInput');
+      const fileLabel = document.getElementById('fileLabel');
 
-    <label for="formatSelect">Convert to:</label>
-    <select id="formatSelect">
-      <option disabled selected>Select format...</option>
-    </select>
+      // Check if a file is selected
+      if (fileInput.files.length > 0) {
+        // Update the label text to the name of the file
+        fileLabel.textContent = fileInput.files[0].name;
+      } else {
+        // If no file is selected, keep the label as "Choose file"
+        fileLabel.textContent = "Choose file";
+      }
+    }
 
     <button onclick="convertFile()">Convert</button>
     <a id="downloadLink" style="display:none;">Download</a>
