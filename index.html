@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>File Converter</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     :root {
       --bg-color: #121212;
@@ -46,30 +47,21 @@
     .file-input-wrapper {
       position: relative;
       width: 100%;
-      display: inline-block;
     }
 
     input[type="file"] {
-      display: none; /* Hide the default file input */
-    }
-
-    /* Custom file input button */
-    .file-input-label {
       display: block;
       width: 100%;
       padding: 1em;
       background: #2a2a2a;
-      color: #fff;
+      color: transparent;
       text-align: center;
       border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
       border: none;
-      position: relative;
-      z-index: 1;
+      font-size: 16px;
     }
 
-    /* Overlay text */
+    /* Make the "No file chosen" text overlap the file input */
     .file-input-wrapper::after {
       content: "No file chosen";
       position: absolute;
@@ -79,7 +71,6 @@
       color: #aaa;
       pointer-events: none;
       font-size: 16px;
-      z-index: 0;  /* Ensure the text is below the label/button */
     }
 
     select, button {
@@ -110,10 +101,9 @@
 
     <label for="fileInput">Select a file:</label>
 
-    <!-- Wrapper for the file input -->
+    <!-- Wrapper for the file input to allow text overlap -->
     <div class="file-input-wrapper">
       <input type="file" id="fileInput" />
-      <label class="file-input-label" for="fileInput">Choose File</label>
     </div>
 
     <label for="formatSelect">Convert to:</label>
