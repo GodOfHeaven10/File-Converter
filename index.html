@@ -4,106 +4,105 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>File Converter</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    :root {
-      --bg-color: #121212;
-      --text-color: #ffffff;
-      --accent-color: #ff8800;
-      --font: 'Segoe UI', sans-serif;
-    }
+  :root {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --accent-color: #ff8800;
+    --font: 'Segoe UI', sans-serif;
+  }
 
-    body {
-      background: var(--bg-color);
-      color: var(--text-color);
-      font-family: var(--font);
-      margin: 0;
-      padding: 2em;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
+  body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font);
+    margin: 0;
+    padding: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
 
-    .container {
-      background: #1e1e1e;
-      padding: 2em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
-      width: 400px;
-    }
+  .container {
+    background: #1e1e1e;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+    width: 400px;
+  }
 
-    h1 {
-      color: var(--accent-color);
-      margin-bottom: 1em;
-      text-align: center;
-    }
+  h1 {
+    color: var(--accent-color);
+    margin-bottom: 1em;
+    text-align: center;
+  }
 
-    label {
+  label {
+    display: block;
+    margin-bottom: 0.5em;
+  }
+
+  input[type="file"] {
       display: block;
-      margin-bottom: 0.5em;
-    }
-
-    input[type="file"] {
-      display: block;
-      width: 100%;
+      width: 25%;
       padding: 0.5em;
       margin: 1em 0;
       border: none; /* Remove any border */
-      background-color: white; /* Set white background */
-      color: #333; /* Text color */
-      position: relative; /* To position the text relative to the input */
+      background-color: none; /* Set white background */
+      color: #FFFFFF; /* Text color */
+      position: absolute; /* To position the text relative to the input */
       z-index: 2; /* Ensures the text stays above the background */
     }
 
     /* Style the text that will overlap */
     .file-text {
-      position: absolute;
+      position: relative;
       top: 50%;
       left: 0;
       right: 0;
       text-align: center;
-      color: #888; /* Lighter text color */
+      color: #FFFFFF; /* Lighter text color */
       pointer-events: none; /* Prevents text from blocking interactions with the file input */
       transform: translateY(-50%); /* Center the text vertically */
       z-index: 1; /* Text stays under the file input button */
     }
 
-    input[type="file"]:focus {
-      outline: none;
-      border: none;
-    }
+  input[type="file"]:focus {
+    outline: none; /* Remove outline */
+    border: none; /* Ensure no border on focus */
+  }
 
-    select, button {
-      display: block;
-      width: 100%;
-      margin: 1em 0;
-      padding: 0.5em;
-      border-radius: 4px;
-      border: none;
-    }
+  select, button {
+    display: block;
+    width: 100%;
+    margin: 1em 0;
+    padding: 0.5em;
+    border-radius: 4px;
+    border: none;
+  }
 
-    button {
-      background-color: var(--accent-color);
-      color: #000;
-      cursor: pointer;
-    }
+  button {
+    background-color: var(--accent-color);
+    color: #000;
+    cursor: pointer;
+  }
 
-    a {
-      margin-top: 1em;
-      color: var(--accent-color);
-      text-decoration: none;
-    }
-  </style>
+  a {
+    margin-top: 1em;
+    color: var(--accent-color);
+    text-decoration: none;
+  }
+</style>
+
 </head>
 <body>
   <div class="container">
     <h1>File Converter</h1>
 
     <label for="fileInput">Select a file:</label>
-    <div class="file-wrapper">
-      <input type="file" id="fileInput" />
-      <span class="file-text">No file chosen</span>
-    </div>
+    <input type="file" id="fileInput" />
 
     <label for="formatSelect">Convert to:</label>
     <select id="formatSelect">
@@ -151,13 +150,6 @@
 
     document.getElementById('fileInput').addEventListener('change', function () {
       const file = this.files[0];
-      const fileText = document.querySelector('.file-text');
-      if (file) {
-        fileText.textContent = file.name;
-      } else {
-        fileText.textContent = "No file chosen";
-      }
-
       if (file) {
         const category = getCategory(file.type);
         updateDropdown(category);
