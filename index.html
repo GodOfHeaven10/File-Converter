@@ -163,14 +163,19 @@
       });
     }
 
-    document.getElementById('fileInput').addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-        const category = getCategory(file.type);
-        updateDropdown(category);
-      }
-    });
+  document.getElementById('fileInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      // Get file name and update the button text
+      const fileName = file.name;
+      const label = document.querySelector('.file-input-label');
+      label.textContent = fileName;  // Change label to file name
 
+      const category = getCategory(file.type);
+      updateDropdown(category);
+    }
+  });
+    
     function convertFile() {
       alert("This is a placeholder — actual conversion logic goes here.");
     }
