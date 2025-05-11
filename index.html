@@ -13,28 +13,62 @@
       flex-direction: column;
       align-items: center;
     }
+
     .container {
       background: white;
       padding: 2rem;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
     }
+
     input, select, button {
       margin: 0.5rem 0;
       padding: 0.5rem;
       font-size: 1rem;
       width: 100%;
     }
+
+    h1, h2 {
+      color: #ff8800;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #ff8800;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #e77d00;
+    }
+
+    a {
+      margin-top: 1rem;
+      color: #ff8800;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Smart File Converter</h2>
-    <input type="file" id="fileInput">
-    <select id="formatDropdown">
+    <h1>Smart File Converter</h1>
+
+    <label for="fileInput">Select a file:</label>
+    <input type="file" id="fileInput" />
+
+    <label for="formatSelect">Convert to:</label>
+    <select id="formatSelect">
       <option disabled selected>Select format...</option>
     </select>
+
     <button onclick="convertFile()">Convert</button>
+
+    <a id="downloadLink" style="display:none;">Download</a>
   </div>
 
   <script>
@@ -56,7 +90,7 @@
     }
 
     function updateDropdown(category) {
-      const dropdown = document.getElementById('formatDropdown');
+      const dropdown = document.getElementById('formatSelect');
       dropdown.innerHTML = '';
       if (!formatMap[category]) {
         const opt = document.createElement('option');
