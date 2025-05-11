@@ -177,7 +177,22 @@
   });
     
     function convertFile() {
-      alert("This is a placeholder — actual conversion logic goes here.");
+      const fileInput = document.getElementById('fileInput');
+      const downloadLink = document.getElementById('downloadLink');
+
+      if (fileInput.files.length === 0) {
+        alert('Please select a file first.');
+        return;
+      }
+
+      const fileName = fileInput.files[0].name;
+      const convertedContent = `Converted file: ${fileName}`;
+
+      const blob = new Blob([convertedContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      downloadLink.href = url;
+      downloadLink.style.visibility = 'visible';
     }
   </script>
 </body>
