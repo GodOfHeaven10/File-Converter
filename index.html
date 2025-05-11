@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>File Converter</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
     :root {
       --bg-color: #121212;
@@ -44,33 +43,34 @@
       margin-bottom: 0.5em;
     }
 
-    .file-input-wrapper {
-      position: relative;
-      width: 100%;
-    }
-
     input[type="file"] {
       display: block;
       width: 100%;
-      padding: 1em;
-      background: #2a2a2a;
-      color: transparent;
-      text-align: center;
-      border-radius: 4px;
-      border: none;
-      font-size: 16px;
+      padding: 0.5em;
+      margin: 1em 0;
+      border: none; /* Remove any border */
+      background-color: white; /* Set white background */
+      color: #333; /* Text color */
+      position: relative; /* To position the text relative to the input */
+      z-index: 2; /* Ensures the text stays above the background */
     }
 
-    /* Make the "No file chosen" text overlap the file input */
-    .file-input-wrapper::after {
-      content: "No file chosen";
+    /* Style the text that will overlap */
+    .file-text {
       position: absolute;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #aaa;
-      pointer-events: none;
-      font-size: 16px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #888; /* Lighter text color */
+      pointer-events: none; /* Prevents text from blocking interactions with the file input */
+      transform: translateY(-50%); /* Center the text vertically */
+      z-index: 1; /* Text stays under the file input button */
+    }
+
+    input[type="file"]:focus {
+      outline: none;
+      border: none;
     }
 
     select, button {
@@ -100,10 +100,9 @@
     <h1>File Converter</h1>
 
     <label for="fileInput">Select a file:</label>
-
-    <!-- Wrapper for the file input to allow text overlap -->
-    <div class="file-input-wrapper">
+    <div class="file-wrapper">
       <input type="file" id="fileInput" />
+      <span class="file-text">No file chosen</span>
     </div>
 
     <label for="formatSelect">Convert to:</label>
@@ -116,6 +115,55 @@
   </div>
 
   <script>
+    const formatMap = {
+      image: ['jpg', 'png', 'webp', 'gif', 'bmp', 'tiff'],
+      video: ['mp4', 'webm', 'avi'],
+      audio: ['mp3', 'wav', 'ogg'],
+      document: ['pdf', 'docx', 'odt'],
+      text: ['txt', 'json', 'xml'],
+    };
+
+    function getCategory(type) {
+      if (type.startsWith('image/')) return 'image';
+      if (type.startsWith('video/')) return 'video';
+      if (type.startsWith('audio/')) return 'audio';
+      if (type === 'application/pdf' || type.includes('word')) return 'document';
+      if (type.startsWith('text/')) return 'text';
+      return 'other';
+    }
+
+    function updateDropdown(category) {
+      const dropdown = document.getElementById('formatSelect');
+      dropdown.innerHTML = '';
+      if (!formatMap[category]) {
+        const opt = document.createElement('option');
+        opt.textContent = 'No supported formats';
+        dropdown.appendChild(opt);
+        return;
+      }
+      formatMap[category].forEach(ext => {
+        const opt = document.createElement('option');
+        opt.value = ext;
+        opt.textContent = '.' + ext;
+        dropdown.appendChild(opt);
+      });
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const file = this.files[0];
+      const fileText = document.querySelector('.file-text');
+      if (file) {
+        fileText.textContent = file.name;
+      } else {
+        fileText.textContent = "No file chosen";
+      }
+
+      if (file) {
+        const category = getCategory(file.type);
+        updateDropdown(category);
+      }
+    });
+
     function convertFile() {
       alert("This is a placeholder — actual conversion logic goes here.");
     }
