@@ -131,6 +131,49 @@
       }
     }
 
+  <script>
+    const formatMap = {
+      image: ['jpg', 'png', 'webp', 'gif', 'bmp', 'tiff'],
+      video: ['mp4', 'webm', 'avi'],
+      audio: ['mp3', 'wav', 'ogg'],
+      document: ['pdf', 'docx', 'odt'],
+      text: ['txt', 'json', 'xml'],
+    };
+
+    function getCategory(type) {
+      if (type.startsWith('image/')) return 'image';
+      if (type.startsWith('video/')) return 'video';
+      if (type.startsWith('audio/')) return 'audio';
+      if (type === 'application/pdf' || type.includes('word')) return 'document';
+      if (type.startsWith('text/')) return 'text';
+      return 'other';
+    }
+
+    function updateDropdown(category) {
+      const dropdown = document.getElementById('formatSelect');
+      dropdown.innerHTML = '';
+      if (!formatMap[category]) {
+        const opt = document.createElement('option');
+        opt.textContent = 'No supported formats';
+        dropdown.appendChild(opt);
+        return;
+      }
+      formatMap[category].forEach(ext => {
+        const opt = document.createElement('option');
+        opt.value = ext;
+        opt.textContent = '.' + ext;
+        dropdown.appendChild(opt);
+      });
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const category = getCategory(file.type);
+        updateDropdown(category);
+      }
+    });
+
     function convertFile() {
       alert("This is a placeholder — actual conversion logic goes here.");
     }
