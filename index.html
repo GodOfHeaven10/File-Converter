@@ -65,20 +65,15 @@
       text-decoration: none;
     }
 
-    /* Make file input look like a button */
-    #fileInput {
-      background-color: var(--accent-color);
+    /* File input defaults to the browser's native appearance */
+    input[type="file"] {
+      display: block;
+      padding: 0.5em;
+      width: 100%;
+      background-color: white;
       color: black;
+      border: 1px solid gray;
       cursor: pointer;
-      padding: 1em;
-      border-radius: 4px;
-      border: none;
-      font-size: 1em;
-    }
-
-    /* Hide the default file input but keep functionality */
-    #fileInput[type="file"] {
-      display: none;
     }
   </style>
 </head>
@@ -86,8 +81,7 @@
   <div class="container">
     <h1>File Converter</h1>
 
-    <!-- Button styled as the file input -->
-    <label for="fileInput" class="button-label">Choose File</label>
+    <label for="fileInput">Choose File</label>
     <input type="file" id="fileInput" />
 
     <label for="formatSelect">Convert to:</label>
