@@ -215,14 +215,31 @@ async function convertFile() {
   // Read the result
   const data = ffmpeg.FS('readFile', `output.${selectedFormat}`);
 
+  // Determine MIME type based on the selected format
+  let mimeType = '';
+  if (selectedFormat === 'mp3' || selectedFormat === 'wav' || selectedFormat === 'ogg') {
+    mimeType = `audio/${selectedFormat}`;
+  } else if (selectedFormat === 'mp4' || selectedFormat === 'webm' || selectedFormat === 'avi') {
+    mimeType = `video/${selectedFormat}`;
+  } else if (selectedFormat === 'jpg' || selectedFormat === 'png' || selectedFormat === 'webp' || selectedFormat === 'gif' || selectedFormat === 'bmp' || selectedFormat === 'tiff') {
+    mimeType = `image/${selectedFormat}`;
+  } else if (selectedFormat === 'pdf') {
+    mimeType = 'application/pdf';
+  } else if (selectedFormat === 'docx' || selectedFormat === 'odt') {
+    mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  } else if (selectedFormat === 'txt' || selectedFormat === 'json' || selectedFormat === 'xml') {
+    mimeType = 'text/plain';
+  }
+
   // Create a Blob and set up the download link
-  const blob = new Blob([data.buffer], { type: `audio/${selectedFormat}` }); // Adjust type as needed
+  const blob = new Blob([data.buffer], { type: mimeType });
   const url = URL.createObjectURL(blob);
   downloadLink.href = url;
   downloadLink.download = outputFileName;
   downloadLink.style.display = 'block';
   downloadLink.textContent = 'Download Converted File';
 }
+
 
 
 
