@@ -189,61 +189,61 @@
     const { createFFmpeg, fetchFile } = FFmpeg;
 const ffmpeg = createFFmpeg({ log: true });
 
-async function convertFile() {
-  const fileInput = document.getElementById('fileInput');
-  const formatSelect = document.getElementById('formatSelect');
-  const downloadLink = document.getElementById('downloadLink');
+ async function convertFile() {
+      const fileInput = document.getElementById('fileInput');
+      const formatSelect = document.getElementById('formatSelect');
+      const downloadLink = document.getElementById('downloadLink');
 
-  if (fileInput.files.length === 0) {
-    alert('Please select a file first.');
-    return;
-  }
+      if (fileInput.files.length === 0) {
+        alert('Please select a file first.');
+        return;
+      }
 
-  const file = fileInput.files[0];
-  const fileName = file.name;
-  const selectedFormat = formatSelect.value;
-  const outputFileName = fileName.split('.').slice(0, -1).join('.') + '.' + selectedFormat;
+      const file = fileInput.files[0];
+      const fileName = file.name;
+      const selectedFormat = formatSelect.value;
+      const outputFileName = fileName.split('.').slice(0, -1).join('.') + '.' + selectedFormat;
 
-  await ffmpeg.load();
+      try {
+        await ffmpeg.load();
 
-  // Write the file to FFmpeg's virtual file system
-  ffmpeg.FS('writeFile', fileName, await fetchFile(file));
+        // Write the file to FFmpeg's virtual file system
+        ffmpeg.FS('writeFile', fileName, await fetchFile(file));
 
-  // Run FFmpeg conversion
-  await ffmpeg.run('-i', fileName, `output.${selectedFormat}`);
+        // Run FFmpeg conversion
+        await ffmpeg.run('-i', fileName, `output.${selectedFormat}`);
 
-  // Read the result
-  const data = ffmpeg.FS('readFile', `output.${selectedFormat}`);
+        // Read the result
+        const data = ffmpeg.FS('readFile', `output.${selectedFormat}`);
 
-  // Determine MIME type based on the selected format
-  let mimeType = '';
-  if (selectedFormat === 'mp3' || selectedFormat === 'wav' || selectedFormat === 'ogg') {
-    mimeType = `audio/${selectedFormat}`;
-  } else if (selectedFormat === 'mp4' || selectedFormat === 'webm' || selectedFormat === 'avi') {
-    mimeType = `video/${selectedFormat}`;
-  } else if (selectedFormat === 'jpg' || selectedFormat === 'png' || selectedFormat === 'webp' || selectedFormat === 'gif' || selectedFormat === 'bmp' || selectedFormat === 'tiff') {
-    mimeType = `image/${selectedFormat}`;
-  } else if (selectedFormat === 'pdf') {
-    mimeType = 'application/pdf';
-  } else if (selectedFormat === 'docx' || selectedFormat === 'odt') {
-    mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-  } else if (selectedFormat === 'txt' || selectedFormat === 'json' || selectedFormat === 'xml') {
-    mimeType = 'text/plain';
-  }
+        // Determine MIME type based on the selected format
+        let mimeType = '';
+        if (selectedFormat === 'mp3' || selectedFormat === 'wav' || selectedFormat === 'ogg') {
+          mimeType = `audio/${selectedFormat}`;
+        } else if (selectedFormat === 'mp4' || selectedFormat === 'webm' || selectedFormat === 'avi') {
+          mimeType = `video/${selectedFormat}`;
+        } else if (selectedFormat === 'jpg' || selectedFormat === 'png' || selectedFormat === 'webp' || selectedFormat === 'gif' || selectedFormat === 'bmp' || selectedFormat === 'tiff') {
+          mimeType = `image/${selectedFormat}`;
+        } else if (selectedFormat === 'pdf') {
+          mimeType = 'application/pdf';
+        } else if (selectedFormat === 'docx' || selectedFormat === 'odt') {
+          mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        } else if (selectedFormat === 'txt' || selectedFormat === 'json' || selectedFormat === 'xml') {
+          mimeType = 'text/plain';
+        }
 
-  // Create a Blob and set up the download link
-  const blob = new Blob([data.buffer], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  downloadLink.href = url;
-  downloadLink.download = outputFileName;
-  downloadLink.style.display = 'block';
-  downloadLink.textContent = 'Download Converted File';
-}
-
-
-
-
-
+        // Create a Blob and set up the download link
+        const blob = new Blob([data.buffer], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = outputFileName;
+        downloadLink.style.display = 'block';
+        downloadLink.textContent = 'Download Converted File';
+      } catch (error) {
+        console.error('Error during conversion:', error);
+        alert('An error occurred during the conversion process.');
+      }
+    }
   </script>
 </body>
 </html>
