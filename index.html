@@ -185,46 +185,65 @@
     }
   });
     
-    function convertFile() {
+    async function convertFile() {
   const fileInput = document.getElementById('fileInput');
-  const format = document.getElementById('formatSelect').value;
+  const formatSelect = document.getElementById('formatSelect');
   const downloadLink = document.getElementById('downloadLink');
 
-  if (fileInput.files.length === 0) {
-    alert('Please select a file.');
-    return;
-  }
-
-  if (!format) {
-    alert('Please select a format to convert to.');
-    return;
-  }
-
+  if (!fileInput.files.length) return alert('Select a file first.');
   const file = fileInput.files[0];
-  const reader = new FileReader();
+  const selectedFormat = formatSelect.value;
+  if (!selectedFormat) return alert('Select a format.');
 
-  reader.onload = function (e) {
-    const img = new Image();
-    img.onload = function () {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
+  const inputExt = file.name.split('.').pop().toLowerCase();
+  const inputCategory = getCategory(inputExt);
+  const outputCategory = getCategory(selectedFormat);
 
-      canvas.toBlob(function (blob) {
-        const url = URL.createObjectURL(blob);
-        downloadLink.href = url;
-        downloadLink.download = file.name.split('.')[0] + '.' + format;
-        downloadLink.textContent = 'Download';
-        downloadLink.style.display = 'inline-block';
-      }, 'image/' + (format === 'jpg' ? 'jpeg' : format));
-    };
-    img.src = e.target.result;
-  };
+  if (!inputCategory || !outputCategory) return alert('Unsupported file type.');
 
-  reader.readAsDataURL(file);
+  const { createFFmpeg, fetchFile } = FFmpeg;
+  const ffmpeg = createFFmpeg({ log: true });
+
+  // TEXT FILE CONVERSION (no ffmpeg)
+  if (inputCategory === 'text' && outputCategory === 'text') {
+    const text = await file.text();
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = `converted.${selectedFormat}`;
+    downloadLink.textContent = 'Download Converted File';
+    downloadLink.style.display = 'block';
+    return;
+  }
+
+  // Use ffmpeg for media files
+  if (!ffmpeg.isLoaded()) await ffmpeg.load();
+  const inputName = `input.${inputExt}`;
+  const outputName = `output.${selectedFormat}`;
+
+  await ffmpeg.FS('writeFile', inputName, await fetchFile(file));
+
+  try {
+    // Special case: mp4 → mp3 (strip video)
+    if (inputExt === 'mp4' && selectedFormat === 'mp3') {
+      await ffmpeg.run('-i', inputName, '-vn', '-ab', '192k', '-ar', '44100', '-f', 'mp3', outputName);
+    } else {
+      await ffmpeg.run('-i', inputName, outputName);
+    }
+
+    const data = ffmpeg.FS('readFile', outputName);
+    const blob = new Blob([data.buffer], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = outputName;
+    downloadLink.textContent = 'Download Converted File';
+    downloadLink.style.display = 'block';
+  } catch (err) {
+    console.error(err);
+    alert('Conversion failed.');
+  }
 }
+
 
   </script>
 </body>
