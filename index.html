@@ -136,8 +136,6 @@
     <button onclick="convertFile()">Convert</button>
     <a id="downloadLink" style="display:none;">Download</a>
   </div>
- <button onclick="convertFile()">Convert</button>
-    <a id="downloadLink" download>Download Converted File</a>
 </div>
   <script>
     const formatMap = {
@@ -189,6 +187,7 @@
     
     function convertFile() {
       const fileInput = document.getElementById('fileInput');
+      const formatSelect = document.getElementById('formatSelect');
       const downloadLink = document.getElementById('downloadLink');
 
       if (fileInput.files.length === 0) {
@@ -196,14 +195,49 @@
         return;
       }
 
-      const fileName = fileInput.files[0].name;
-      const convertedContent = `Converted file: ${fileName}`;
+      const selectedExt = formatSelect.value || 'txt';
+      const originalName = fileInput.files[0].name.split('.')[0];
+      const convertedContent = `Converted file: ${originalName}.${selectedExt}`;
 
       const blob = new Blob([convertedContent], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
 
       downloadLink.href = url;
-      downloadLink.style.visibility = 'visible';
+      downloadLink.download = `${originalName}_converted.${selectedExt}`;
+      downloadLink.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
+What was fixed:
+
+The downloadLink now has the correct href and download attributes.
+
+The file gets a meaningful name like filename_converted.txt instead of a generic one.
+
+The link is hidden until the file is actually converted.
+
+Clean and visually matching with your theme.
+
+Would you like to also implement real conversion logic (like turning .png into .jpg, etc.)?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ChatGPT can make mistakes. Check important info. See Cookie Preferences.
     }
   </script>
 </body>
